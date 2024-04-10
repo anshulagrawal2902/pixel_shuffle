@@ -595,7 +595,7 @@ def build_swint_backbone(cfg, input_shape):
     """
     out_features = cfg.MODEL.SWINT.OUT_FEATURES
 
-    model = SwinTransformer(img_size=cfg.DATA.IMG_SIZE,
+    model = SwinTransformer(img_size=224,
                                 patch_size=cfg.MODEL.SWINT.PATCH_SIZE,
                                 in_chans=cfg.MODEL.SWINT.IN_CHANS,
                                 num_classes=cfg.MODEL.NUM_CLASSES,
