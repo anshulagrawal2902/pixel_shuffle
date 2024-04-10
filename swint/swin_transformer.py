@@ -517,6 +517,9 @@ class SwinTransformer(Backbone):
         # stochastic depth
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))]  # stochastic depth decay rule
 
+        self._out_feature_strides = {}
+        self._out_feature_channels = {}
+
         # build layers
         self.layers = nn.ModuleList()
         for i_layer in range(self.num_layers):
@@ -534,6 +537,11 @@ class SwinTransformer(Backbone):
                                downsample=PatchMerging if (i_layer < self.num_layers - 1) else None,
                                use_checkpoint=use_checkpoint)
             self.layers.append(layer)
+
+            stage = f'stage{i_layer+2}'
+            if stage in self.out_features:
+                self._out_feature_channels[stage] = embed_dim * 2 ** i_layer
+                self._out_feature_strides[stage] = 4 * 2 ** i_layer
 
         self.norm = norm_layer(self.num_features)
         self.avgpool = nn.AdaptiveAvgPool1d(1)
@@ -586,6 +594,13 @@ class SwinTransformer(Backbone):
         flops += self.num_features * self.num_classes
         return flops
 
+    def output_shape(self):
+        return {
+            name: ShapeSpec(
+                channels=self._out_feature_channels[name], stride=self._out_feature_strides[name]
+            )
+            for name in self.out_features
+        }
 
 @BACKBONE_REGISTRY.register()
 def build_swint_backbone(cfg, input_shape):
@@ -598,21 +613,21 @@ def build_swint_backbone(cfg, input_shape):
     out_features = cfg.MODEL.SWINT.OUT_FEATURES
 
     model = SwinTransformer(img_size=224,
-                                patch_size=2,
-                                # in_chans=cfg.MODEL.SWINT.IN_CHANS,
+                                patch_size=4,
+                                in_chans=input_shape.channels,
                                 num_classes=cfg.MODEL.ROI_HEADS.NUM_CLASSES,
                                 embed_dim=cfg.MODEL.SWINT.EMBED_DIM,
                                 depths=cfg.MODEL.SWINT.DEPTHS,
                                 num_heads=cfg.MODEL.SWINT.NUM_HEADS,
                                 window_size=cfg.MODEL.SWINT.WINDOW_SIZE,
                                 mlp_ratio=cfg.MODEL.SWINT.MLP_RATIO,
-                                # qkv_bias=cfg.MODEL.SWINT.QKV_BIAS,
-                                # qk_scale=cfg.MODEL.SWINT.QK_SCALE,
-                                # drop_rate=cfg.MODEL.DROP_RATE,
+                                qkv_bias=True,
+                                qk_scale=None,
+                                drop_rate=0,
                                 drop_path_rate=cfg.MODEL.DROP_PATH_RATE,
                                 ape=cfg.MODEL.SWINT.APE,
-                                # patch_norm=cfg.MODEL.SWINT.PATCH_NORM,
-                                # use_checkpoint=cfg.TRAIN.USE_CHECKPOINT,
+                                patch_norm=True,
+                                use_checkpoint=False,
                                 out_features=out_features
                                 )
 
