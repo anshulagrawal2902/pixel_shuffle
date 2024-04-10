@@ -596,21 +596,22 @@ def build_swint_backbone(cfg, input_shape):
     out_features = cfg.MODEL.SWINT.OUT_FEATURES
 
     model = SwinTransformer(img_size=224,
-                                patch_size=cfg.MODEL.SWINT.PATCH_SIZE,
-                                in_chans=cfg.MODEL.SWINT.IN_CHANS,
-                                num_classes=cfg.MODEL.NUM_CLASSES,
+                                patch_size=2,
+                                # in_chans=cfg.MODEL.SWINT.IN_CHANS,
+                                num_classes=cfg.MODEL.ROI_HEADS.NUM_CLASSES,
                                 embed_dim=cfg.MODEL.SWINT.EMBED_DIM,
                                 depths=cfg.MODEL.SWINT.DEPTHS,
                                 num_heads=cfg.MODEL.SWINT.NUM_HEADS,
                                 window_size=cfg.MODEL.SWINT.WINDOW_SIZE,
                                 mlp_ratio=cfg.MODEL.SWINT.MLP_RATIO,
-                                qkv_bias=cfg.MODEL.SWINT.QKV_BIAS,
-                                qk_scale=cfg.MODEL.SWINT.QK_SCALE,
-                                drop_rate=cfg.MODEL.DROP_RATE,
+                                # qkv_bias=cfg.MODEL.SWINT.QKV_BIAS,
+                                # qk_scale=cfg.MODEL.SWINT.QK_SCALE,
+                                # drop_rate=cfg.MODEL.DROP_RATE,
                                 drop_path_rate=cfg.MODEL.DROP_PATH_RATE,
                                 ape=cfg.MODEL.SWINT.APE,
-                                patch_norm=cfg.MODEL.SWINT.PATCH_NORM,
-                                use_checkpoint=cfg.TRAIN.USE_CHECKPOINT)
+                                # patch_norm=cfg.MODEL.SWINT.PATCH_NORM,
+                                # use_checkpoint=cfg.TRAIN.USE_CHECKPOINT
+                                )
 
     return model
 
