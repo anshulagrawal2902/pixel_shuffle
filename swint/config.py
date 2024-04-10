@@ -14,6 +14,7 @@ def add_swint_config(cfg):
     cfg.MODEL.SWINT.DROP_PATH_RATE = 0.2
     cfg.MODEL.SWINT.APE = False
     cfg.MODEL.BACKBONE.FREEZE_AT = -1
+    cfg.MODEL.PATCH_NORM =False
 
     # addation
     cfg.MODEL.FPN.TOP_LEVELS = 2
