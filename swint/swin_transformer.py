@@ -269,9 +269,9 @@ class SwinTransformerBlock(nn.Module):
 
         return x
 
-    # def extra_repr(self) -> str:
-    #     return f"dim={self.dim}, input_resolution={self.input_resolution}, num_heads={self.num_heads}, " \
-    #            f"window_size={self.window_size}, shift_size={self.shift_size}, mlp_ratio={self.mlp_ratio}"
+    def extra_repr(self) -> str:
+        return f"dim={self.dim}, input_resolution={self.input_resolution}, num_heads={self.num_heads}, " \
+               f"window_size={self.window_size}, shift_size={self.shift_size}, mlp_ratio={self.mlp_ratio}"
 
     def flops(self):
         flops = 0
@@ -440,8 +440,8 @@ class PatchEmbed(nn.Module):
     def forward(self, x):
         B, C, H, W = x.shape
         # FIXME look at relaxing size constraints
-        assert H == self.img_size[0] and W == self.img_size[1], \
-            f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
+        # assert H == self.img_size[0] and W == self.img_size[1], \
+        #     f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
         x = self.proj(x).flatten(2).transpose(1, 2)  # B Ph*Pw C
         if self.norm is not None:
             x = self.norm(x)
@@ -612,7 +612,7 @@ def build_swint_backbone(cfg, input_shape):
     """
     out_features = cfg.MODEL.SWINT.OUT_FEATURES
 
-    model = SwinTransformer(img_size=224,
+    model = SwinTransformer(img_size=input_shape.,
                                 patch_size=4,
                                 in_chans=input_shape.channels,
                                 num_classes=cfg.MODEL.ROI_HEADS.NUM_CLASSES,
