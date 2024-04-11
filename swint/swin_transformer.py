@@ -633,27 +633,6 @@ def build_swint_backbone(cfg, input_shape):
 
     return model
 
-    # return SwinTransformer(
-    #     patch_size=4,
-    #     in_chans=input_shape.channels,
-    #     embed_dim=cfg.MODEL.SWINT.EMBED_DIM,
-    #     depths=cfg.MODEL.SWINT.DEPTHS,
-    #     num_heads=cfg.MODEL.SWINT.NUM_HEADS,
-    #     window_size=cfg.MODEL.SWINT.WINDOW_SIZE,
-    #     mlp_ratio=cfg.MODEL.SWINT.MLP_RATIO,
-    #     qkv_bias=True,
-    #     qk_scale=None,
-    #     drop_rate=0.,
-    #     attn_drop_rate=0.,
-    #     drop_path_rate=cfg.MODEL.SWINT.DROP_PATH_RATE,
-    #     norm_layer=nn.LayerNorm,
-    #     ape=cfg.MODEL.SWINT.APE,
-    #     patch_norm=True,
-    #     frozen_stages=cfg.MODEL.BACKBONE.FREEZE_AT,
-    #     out_features=out_features
-    # )
-
-
 @BACKBONE_REGISTRY.register()
 def build_swint_fpn_backbone(cfg, input_shape: ShapeSpec):
     """
